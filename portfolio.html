@@ -1,0 +1,143 @@
+<html>
+<head>
+	<script src="https://kit.fontawesome.com/147e53a236.js" crossorigin="anonymous"></script>
+	<style>
+		body {
+		  height: 100vh;
+		  width: 100vw;
+		  background-color: black;
+		  margin: 0rem;
+		  overflow: hidden;
+		}
+
+		#image-track {
+		  display: flex;
+		  gap: 4vmin;
+		  position: absolute;
+		  left: 50%;
+		  top: 50%;
+		  transform: translate(0%, -50%); 
+		  user-select: none; /* -- Prevent image highlighting -- */
+		  background-color:black;
+		}
+
+		.image {
+		  width: 40vmin;
+		  height: 56vmin;
+		  object-fit: cover;
+		  object-position: 100% center;
+		  background-color:black;
+		}
+		
+		@font-face {
+			font-family: "manrope";
+			src: url("Manrope-Regular.ttf");
+		}
+		 
+		#home {
+			font-size:16;
+			color:f5f5f5;/* -- white -- */
+			position:absolute;
+			transform: translate(10vw, 38vh); 
+			font-family:manrope;
+		}
+		
+		#end {
+			font-size:16;
+			color:f5f5f5;/* -- white -- */
+			position:absolute;
+			transform: translate(65vw, 38vh); 
+			font-family:manrope;
+		}
+
+		i{
+			color:f5f5f5;/* -- white -- */
+		}
+
+		i:hover{
+			color:#1794fe;
+		}
+		
+	</style>
+</head>
+<body>
+	<div id="home">
+		<h1>Hi there, I'm Richard!</h1>
+		<p>Born in the tropics, now searching for new horizons<br> Currently learning in SMAK St. Louis 1 High School</p>
+	</div>
+	
+	<div id="end">
+		<h1>Like my work?</h1>
+		<p>Contact me at:<br><br>
+			<a href="mailto: richardkarunia@gmail.com" ><i class="fa-regular fa-envelope fa-2xl"> </i></a> &nbsp
+			<a href="https://www.instagram.com/richard_karunia/"  target="_blank" ><i class="fa-brands fa-instagram fa-2xl"></i></a> &nbsp
+			<a href="https://www.linkedin.com/in/richard-karunia-0073a5208/" target="_blank" ><i class="fa-brands fa-linkedin fa-2xl"></i></a> &nbsp
+		</p>
+	</div>
+
+	<div id="image-track" data-mouse-down-at="0" data-prev-percentage="0">
+	/* 1 */
+	  <a href="MPLS.html" draggable="false" > <img class="image" src="https://cdn.discordapp.com/attachments/952032296389738506/1000208129377714286/1658538535636.jpg" draggable="false" /></a>
+	/* 2 */
+	  <a href="" draggable="false" ><img class="image" src="https://cdn.discordapp.com/attachments/952032296389738506/999298442679550052/DSC05615.JPG" draggable="false" /></a>
+	/* 3 */
+	  <a href="" draggable="false" ><img class="image" src="https://cdn.discordapp.com/attachments/742985793987149878/1049690654055350332/IMG_2814.jpg" draggable="false" /></a>
+	/* 4 */
+	  <a href="" draggable="false" ><img class="image" src="https://media.discordapp.net/attachments/742985793987149878/1047863737253646456/1Q5A1501.jpg?width=994&height=663" draggable="false" /></a>
+	/* 5 */
+	  <a href="" draggable="false" ><img class="image" src="https://media.discordapp.net/attachments/742985793987149878/1049691982349484092/image.png?width=991&height=663" draggable="false" /></a>
+	/* 6 */
+	  <a href="DBL.html" draggable="false" ><img class="image" src="https://media.discordapp.net/attachments/742985793987149878/1049689573015441530/IMG_6317.jpg?width=994&height=663" draggable="false" /></a>
+	/* 7 */
+	  <a href="" draggable="false" ><img class="image" src="https://cdn.discordapp.com/attachments/742985793987149878/1049679435210702848/1.jpg" draggable="false" /></a>
+	/* 8 */
+	  <a href="" draggable="false" ><img class="image" src="https://cdn.discordapp.com/attachments/742985793987149878/1049679616538845265/1Q5A5349.jpg" draggable="false" /></a>
+	</div>
+	
+	
+</body>
+<script>
+	const track = document.getElementById("image-track");
+
+	const handleOnDown = e => track.dataset.mouseDownAt = e.clientX;
+
+	const handleOnUp = () => {
+	  track.dataset.mouseDownAt = "0";  
+	  track.dataset.prevPercentage = track.dataset.percentage;
+	}
+
+	const handleOnMove = e => {
+	  if(track.dataset.mouseDownAt === "0") return;
+	  
+	  const mouseDelta = parseFloat(track.dataset.mouseDownAt) - e.clientX,
+			maxDelta = window.innerWidth / 2;
+	  
+	  const percentage = (mouseDelta / maxDelta) * -100,
+			nextPercentageUnconstrained = parseFloat(track.dataset.prevPercentage) + percentage,
+			nextPercentage = Math.max(Math.min(nextPercentageUnconstrained, 0), -100);
+	  
+	  track.dataset.percentage = nextPercentage;
+	  
+	  track.animate({
+		transform: `translate(${nextPercentage}%, -50%)`
+	  }, { duration: 2200, fill: "forwards" });
+	  
+	  for(const image of track.getElementsByClassName("image")) {
+		image.animate({
+		  objectPosition: `${100 + nextPercentage}% center`
+		}, { duration: 2200, fill: "forwards" });
+	  }
+	}
+	window.onmousedown = e => handleOnDown(e);
+
+	window.ontouchstart = e => handleOnDown(e.touches[0]);
+
+	window.onmouseup = e => handleOnUp(e);
+
+	window.ontouchend = e => handleOnUp(e.touches[0]);
+
+	window.onmousemove = e => handleOnMove(e);
+
+	window.ontouchmove = e => handleOnMove(e.touches[0]);
+</script>
+</html>
